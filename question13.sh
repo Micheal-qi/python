@@ -1,5 +1,7 @@
-git checkout -b feature-branch
-rm question*.sh
-echo "Content of file13.txt" > file13.txt
+git checkout -b assignment-branch
+git rm *.sh
+touch file13.txt
 git add file13.txt
-git push origin feature-branch
+git commit -m "Add file13.txt"
+git push origin assignment-branch
+git push --set-upstream origin assignment-branch
