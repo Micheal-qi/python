@@ -1,7 +1,6 @@
-git checkout -b assignment-branch
+git checkout -b assignment13
 git rm *.sh
-touch file13.txt
+echo "This is file13.txt" > file13.txt
 git add file13.txt
 git commit -m "Add file13.txt"
-git push origin assignment-branch
-git push --set-upstream origin assignment-branch
+git push origin assignment13
