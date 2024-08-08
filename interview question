@@ -1,0 +1,47 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data preparation
+data = {
+    "Year": [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+    "Median house price": [340000, 370000, 350000, 420000, 425000, 500000, 520000, 550000, 596000, 610000, 660000, 720000, 730000, 760000],
+    "Westpac": [56, 53, None, 13, 33, -5, 45, 34, 34, 20, -20, 15, 15, -10],
+    "Joe Bloggs": [23, 34, 19, 42, 23, 15, 1500, 18, 19, 23, 13, 8, 7, -2],
+    "Harry Spent": [-20, -80, -70, -80, -50, -90, -30, None, -110, -90, -60, -69, -80, -80]
+}
+
+df = pd.DataFrame(data)
+
+# Handling missing values
+df.fillna(method='ffill', inplace=True)
+
+# Calculating forecasted prices
+for col in ["Westpac", "Joe Bloggs", "Harry Spent"]:
+    df[col + " Forecast"] = df["Median house price"].shift(1) * (1 + df[col] / 100)
+
+# Calculate Mean Absolute Percentage Error (MAPE)
+def calculate_mape(actual, forecast):
+    return np.mean(np.abs((actual - forecast) / actual)) * 100
+
+mape_westpac = calculate_mape(df["Median house price"], df["Westpac Forecast"])
+mape_joe_bloggs = calculate_mape(df["Median house price"], df["Joe Bloggs Forecast"])
+mape_harry_spent = calculate_mape(df["Median house price"], df["Harry Spent Forecast"])
+
+# Output results
+print("MAPE for Westpac: {:.2f}%".format(mape_westpac))
+print("MAPE for Joe Bloggs: {:.2f}%".format(mape_joe_bloggs))
+print("MAPE for Harry Spent: {:.2f}%".format(mape_harry_spent))
+
+# Plotting
+plt.figure(figsize=(14, 7))
+plt.plot(df["Year"], df["Median house price"], label="Actual Price", marker='o')
+plt.plot(df["Year"], df["Westpac Forecast"], label="Westpac Forecast", marker='x')
+plt.plot(df["Year"], df["Joe Bloggs Forecast"], label="Joe Bloggs Forecast", marker='s')
+plt.plot(df["Year"], df["Harry Spent Forecast"], label="Harry Spent Forecast", marker='d')
+plt.xlabel("Year")
+plt.ylabel("House Price")
+plt.legend()
+plt.title("House Price Forecasts vs Actual")
+plt.grid(True)
+plt.show()
